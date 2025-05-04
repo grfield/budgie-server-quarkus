@@ -7,11 +7,10 @@ databaseChangeLog:
       author: Gary Field
       labels: my-label
       context: my-context
-      comment: Creating an example table
+      comment: Create initial set of tables
       changes:
         - createTable:
-            schemaName: budgie-dev
-            tableName: person
+            tableName: account
             columns:
               - column:
                   name: id
@@ -22,15 +21,19 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: name
-                  type: varchar(50)
+                  type: text
                   constraints:
                     nullable: false
               - column:
-                  name: address1
-                  type: varchar(50)
+                  name: description
+                  type: text
               - column:
-                  name: address2
-                  type: varchar(50)
+                  name: type
+                  type: account_type
+                  constraints:
+                    nullable: false
               - column:
-                  name: city
-                  type: varchar(30)
+                  name: balance
+                  type: numeric
+                  constraints:
+                    nullable: false
