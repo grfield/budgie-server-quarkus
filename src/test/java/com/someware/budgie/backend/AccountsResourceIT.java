@@ -3,6 +3,6 @@ package com.someware.budgie.backend;
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
 @QuarkusIntegrationTest
-class GreetingResourceIT extends GreetingResourceTest {
+class AccountsResourceIT extends AccountsResourceTest {
     // Execute the same tests but in packaged mode.
 }
