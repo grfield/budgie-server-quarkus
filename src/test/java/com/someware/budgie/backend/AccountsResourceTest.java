@@ -14,7 +14,7 @@ class AccountsResourceTest {
           .when().get("/accounts")
           .then()
              .statusCode(200)
-             .body(is("[{ 'id': 1, 'name': 'Barclays', 'type': 'credit', 'balance': 1000 }]"));
+             .body(is("[{ 'id': 1, 'name': 'Barclays', 'description': 'Joint family account', 'type': 'credit', 'balance': 1000 }]"));
     }
 
 }

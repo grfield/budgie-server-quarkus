@@ -1,14 +1,19 @@
 package com.someware.budgie.backend;
 
+import com.someware.budgie.backend.entities.Account;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
+import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -32,27 +37,54 @@ public class AccountsResource {
         content = @Content(
             mediaType = MediaType.APPLICATION_JSON,
             schema = @Schema(
-                examples = {
-                    "[{'id': 1, 'name': 'Barclays', 'type': 'credit', 'balance': 1000.00}]"
+                examples = {"""
+                    [
+                      {
+                        "id": 1,
+                        "name": "Barclays",
+                        "description": "Joint family account",
+                        "type": "credit",
+                        "balance": 1000.00
+                      }
+                    ]
+                    """
                 }
             )
         )
     )
     public String getAccounts() {
-        return "[{ 'id': 1, 'name': 'Barclays', 'type': 'credit', 'balance': 1000 }]";
+        return "[{ 'id': 1, 'name': 'Barclays', 'description': 'Joint family account', 'type': 'credit', 'balance': 1000 }]";
     }
 
     @POST
+    @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Create a new account", description = "Creates a new financial account")
+    @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_JSON,
+        schema = @Schema(implementation = Account.class),
+        examples = @ExampleObject(
+            name = "default",
+            summary = "Example account creation request",
+            value = """
+                {
+                  "name": "Barclays",
+                  "type": "Current",
+                  "balance": 1000.00,
+                  "description": "Primary account for daily expenses"
+                }
+                """
+        )))
     @APIResponse(
-        responseCode = "200",
+        responseCode = "201",
         description = "Account created successfully",
         content = @Content(mediaType = MediaType.APPLICATION_JSON)
     )
-    public String createAccount(String account) {
-        return account;
+    public Response createAccount(Account account) {
+        account.persist();
+        return Response.status(Response.Status.CREATED)
+            .entity(account)
+            .build();
     }
 
 }

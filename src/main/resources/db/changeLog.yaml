@@ -37,3 +37,12 @@ databaseChangeLog:
                   type: numeric
                   constraints:
                     nullable: false
+  - changeSet:
+      id: 2
+      author: Gary Field
+      changes:
+        - sql:
+            sql: ALTER TABLE account ADD CONSTRAINT balance_check CHECK (balance >= 0)
+        - sql:
+            sql: ALTER TABLE account ADD CONSTRAINT type_check CHECK (type IN ('savings', 'credit', 'current', 'liability'))
+
