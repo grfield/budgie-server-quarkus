@@ -9,24 +9,19 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.info.Info;
 import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+
+import java.util.List;
 
 @Path("/accounts")
-@OpenAPIDefinition(
-    info = @Info(
-        title = "Accounts API",
-        version = "1.0",
-        description = "API for managing financial accounts"
-    )
-)
-public class AccountsResource {
+@Tag(name = "Account Management API", description = "Financial accounts management")
+public interface AccountServiceApi {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -40,7 +35,6 @@ public class AccountsResource {
                 examples = {"""
                     [
                       {
-                        "id": 1,
                         "name": "Barclays",
                         "description": "Joint family account",
                         "type": "credit",
@@ -52,9 +46,7 @@ public class AccountsResource {
             )
         )
     )
-    public String getAccounts() {
-        return "[{ 'id': 1, 'name': 'Barclays', 'description': 'Joint family account', 'type': 'credit', 'balance': 1000 }]";
-    }
+    List<Account> getAccounts();
 
     @POST
     @Transactional
@@ -80,11 +72,6 @@ public class AccountsResource {
         description = "Account created successfully",
         content = @Content(mediaType = MediaType.APPLICATION_JSON)
     )
-    public Response createAccount(Account account) {
-        account.persist();
-        return Response.status(Response.Status.CREATED)
-            .entity(account)
-            .build();
-    }
+    Response createAccount(Account account);
 
 }
