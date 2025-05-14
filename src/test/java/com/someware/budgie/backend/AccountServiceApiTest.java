@@ -19,7 +19,7 @@ class AccountServiceApiTest {
             .body("size()", is(1))
             .body("[0].name", is("Barclays"))
             .body("[0].description", is("Joint family account"))
-            .body("[0].type", is("current"))
+            .body("[0].type", is("checking"))
             .body("[0].balance", is(1000.00F));
     }
 }
